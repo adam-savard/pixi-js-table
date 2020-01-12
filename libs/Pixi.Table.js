@@ -49,12 +49,23 @@ class Table extends PIXI.Container{
      * @param {} rowNumber The row number to splice at
      */
     addRowAt(rowNumber){
-        console.log(this.rows);
+        
         this.rows.splice(rowNumber, 0, new PIXI.Container());
-        console.log(this.rows);
-        console.log(this.children);
+        
+        
         this.addChildAt(this.rows[rowNumber], rowNumber );
-        console.log(this.children);
+
+        let row = this.rows[rowNumber];
+        if(this.rowCount > 1){
+            row.position.set(
+                5,
+                this.rows[this.rows.length -2].y + this.rows[this.rows.length -2].height
+            )
+        }
+        else{
+            row.position.set(5,5);
+        }
+        
         this.updateRows();
     }
 
@@ -70,6 +81,8 @@ class Table extends PIXI.Container{
                 row.cells = [];
                 row.cells.push(displayObject)
                 row.addChild(row.cells[row.cells.length -1]);
+                let cell = row.cells[row.cells.length -1];
+                cell.position.set(5,5);
             }
             else if(cellNumber > row.cells.length){
                 row.cells.push(displayObject)
@@ -79,6 +92,7 @@ class Table extends PIXI.Container{
                 row.cells.splice(cellNumber, 0, displayObject);
                 row.addChildAt(displayObject, cellNumber);
             }
+        
 
         this.updateRows();
     }
@@ -96,6 +110,7 @@ class Table extends PIXI.Container{
         else{
             throw "Unable to delete row " + rowNumber + ". Row does not exist.";
         }
+        this.updateRows();
     }
 
     /**
@@ -173,10 +188,26 @@ class Table extends PIXI.Container{
         //we know the maximum amount of columns. We just have to parse through all of them.
         let currentColumn = 0;
         let maxColWidth = 0;
-        let columnSeparation = [0];
+        let columnSeparation = [5];
         let _inst = this;
-        let maxRowHeight = 0;
         let rowSeparation = [5];
+        
+        //first thing to do is find out what the highest cell is for each row, and get its height.
+        //add that to the previous entry, and you're good to go.
+        this.rows.forEach(function(row, index){
+            rowSeparation.push(0);
+            if(typeof row.cells != 'undefined'){
+                row.cells.forEach(function(cell){
+                     if(cell.height + 10 + rowSeparation[index] > rowSeparation[index + 1]){
+                        rowSeparation[index + 1] = cell.height + 10 + rowSeparation[index];
+                     }
+                });
+            }
+            else{
+                rowSeparation[index + 1] = rowSeparation[index] + 10
+            }
+        })
+        
         
         while(currentColumn < this.maxCols){
             this.rows.forEach(function(row, index){
@@ -184,32 +215,22 @@ class Table extends PIXI.Container{
                     let cell = _inst.getCell(index, currentColumn);
                     //if you're here, check the width of the current cell
                     if(cell.width > maxColWidth) maxColWidth = cell.width;
-
-                    if(cell.height > maxRowHeight) maxRowHeight = cell.height;
                 }
             });
+
             if(columnSeparation.length > 0){
                 columnSeparation.push(columnSeparation[columnSeparation.length -1] + maxColWidth + 10);
             }
             else{
                 columnSeparation.push(maxColWidth + 10);
             }
-
-            if(rowSeparation.length > 0){
-                rowSeparation.push(rowSeparation[rowSeparation.length -1] + maxRowHeight + 10);
-            }
-            else{
-                rowSeparation.push(maxRowHeight + 10);
-            }
             
 
             currentColumn++;
             maxColWidth = 0;
-            maxRowHeight = 0;
         }
 
         currentColumn = 0;
-
         //after figuring out the column width of each column, then you can space things out as needed.
         while(currentColumn < this.maxCols){
             this.rows.forEach(function(row, index){
@@ -221,6 +242,7 @@ class Table extends PIXI.Container{
                 row.position.y = rowSeparation[index];
             });
             currentColumn++;
+            console.log(columnSeparation);
         }
         
     }
