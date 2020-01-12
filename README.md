@@ -62,3 +62,4 @@ if(cell = table.getCell(0,1)){
 - There are no gridlines at the moment. _I don't plan to include them unless it is specifically requested._ You can submit a pull request to have them included if you wish.
 - The table size is automatic; _there is no way to clamp table sizes._
 - If data changes inside of a cell, the table will not update its sizing. _Use `table.updateRows()` to address this._
+- There is no way to specify rows/columns at creation. _This may change in a later update_
