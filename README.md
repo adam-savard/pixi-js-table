@@ -54,6 +54,7 @@ if(cell = table.getCell(0,1)){
 | `table.deleteCell(rowNumber, cellNumber);`  | Deletes the specified cell. Note: this calls the `DisplayObject.destroy(true)` function. _All data in this cell WILL be lost, and any references to the cell will cause errors!_  |
 | `table.getCell(rowNumber, cellNumber);`  | Gets the specified cell; returns false if the cell does not exist.  |
 | `table.updateRows();`  | Called automatically when any changes to the table are made, but NOT when data in the cells change. Call this to cascade through the table so automatic spacing is preserved.  |
+| `table.update();`  | An alias for the previous command.  |
 | `table.debugLog(method, value);`  | Internal use. To turn on debugging information, pass in an options object to the class on creation (`{debugLog:true}`)  |
 
 ## LIMITATIONS:
