@@ -2,7 +2,7 @@
 A framework for creating tables in Pixi JS
 
 ## WHAT IS THIS FOR?
-Pixi.Table (invoked by `new Table();`) is a class that you can include in your Pixi projects for displaying a table of any size. This aims to have basic functionality similar to tables in HTML5. This is not terribly efficient, hwoever; large tables may take a very long time to update.
+Pixi.Table (invoked by `new Table();`) is a class that you can include in your Pixi projects for displaying a table of any size. This aims to have basic functionality similar to tables in HTML5. This is not terribly efficient, however; large tables may take a very long time to update.
 
 ## HOW DO I USE THIS?
 
