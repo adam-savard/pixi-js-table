@@ -189,6 +189,10 @@ class Table extends PIXI.Container{
         }
     }
 
+    update(){
+        this.updateRows();
+    }
+
     /**
      * INTERNAL USE: Used to separate out all the display objects into auto-sizing areas on the x-axis.
      */
