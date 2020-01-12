@@ -1,3 +1,5 @@
+//Version 1.0.1
+
 /**
  * Creates a new table that can have any PIXI.DisplayObject attached to it. The way to address updates is to use rows and cells.
  * You are given a starting row when the class is initialized.
@@ -9,11 +11,11 @@ class Table extends PIXI.Container{
      * @param {*} options Contains single option for now, drawGridLines.
      */
     constructor(options = {
-        drawGridLines: false
+        debugMode: false
     }){
         super();
         //options
-        this.drawGridLines = options.drawGridLines;
+        this.debugMode = options.debugMode; //for displaying information about what's happening. Goes to the console.log
 
         //display objects
         this.rows = [new PIXI.Container()];
@@ -27,6 +29,7 @@ class Table extends PIXI.Container{
      * Adds a blank row to the table.
      */
     addRow(){
+        this.debugLog("add row");
         this.rows.push(new PIXI.Container());
         this.rowCount++;
         let row = this.rows[this.rows.length -1];
@@ -49,7 +52,7 @@ class Table extends PIXI.Container{
      * @param {} rowNumber The row number to splice at
      */
     addRowAt(rowNumber){
-        
+        this.debugLog("add row at", {rowNumber:rowNumber});
         this.rows.splice(rowNumber, 0, new PIXI.Container());
         
         
@@ -76,6 +79,7 @@ class Table extends PIXI.Container{
      * @param {*} cellNumber The cell number
      */
     addCellAt(displayObject, rowNumber, cellNumber){
+        this.debugLog("add cell at", {rowNumber:rowNumber, cellNumber:cellNumber});
         let row = this.rows[rowNumber];
             if(typeof row.cells == 'undefined' && cellNumber == 0){
                 row.cells = [];
@@ -102,6 +106,7 @@ class Table extends PIXI.Container{
      * @param {*} rowNumber The row number to delete.
      */
     deleteRow(rowNumber){
+        this.debugLog("delete row", {rowNumber:rowNumber});
         if(rowNumber > -1 && rowNumber < this.rowCount){
             this.rows[rowNumber].destroy(true);
             this.rowCount--;
@@ -119,6 +124,7 @@ class Table extends PIXI.Container{
      * @param {int} rowNumber The row number that the cell should be inserted into.
      */
     addCell(displayObject, rowNumber = this.rowCount - 1){
+        this.debugLog("add cell");
         if(this.rowCount === 0){
             throw "Can't add cell when there are no rows!";
         }
@@ -155,6 +161,7 @@ class Table extends PIXI.Container{
      * @param {*} cellNumber The cell number
      */
     deleteCell(rowNumber, cellNumber){
+        this.debugLog("delete cell", {rowNumber:rowNumber, cellNumber:cellNumber});
         if(rowNumber > -1 && rowNumber < this.rowCount){
             if(cellNumber < this.rows[rowNumber].cells.length && cellNumber > -1){
                 this.rows[rowNumber].cells[cellNumber].destroy(true);
@@ -173,6 +180,7 @@ class Table extends PIXI.Container{
      * @param {*} cellNumber The cell number on the row
      */
     getCell(rowNumber, cellNumber){
+        this.debugLog("get cell", {rowNumber:rowNumber, cellNumber:cellNumber});
         try{
             return this.rows[rowNumber].cells[cellNumber];
         }
@@ -185,6 +193,7 @@ class Table extends PIXI.Container{
      * INTERNAL USE: Used to separate out all the display objects into auto-sizing areas on the x-axis.
      */
     updateRows(){
+        this.debugLog("update rows");
         //we know the maximum amount of columns. We just have to parse through all of them.
         let currentColumn = 0;
         let maxColWidth = 0;
@@ -244,5 +253,43 @@ class Table extends PIXI.Container{
             currentColumn++;
         }
         
+    }
+
+    /**
+     * Internal use. Can help trace where the function goes wrong.
+     * @param {string} method The method invoked.
+     * @param {object} value A value object with properties displayed per method.
+     */
+    debugLog(method, value){
+        if(this.debugMode){
+            switch(method){
+                case "update rows":
+                    console.log("Updating rows...");
+                    break;
+                case "get cell":
+                    console.log("Getting the cell (" + value.rowNumber + ", " + value.cellNumber+")");
+                    break;
+                case "delete cell":
+                    console.log("Deleting cell (" + value.rowNumber + ", " + value.cellNumber+")");
+                    break;
+                case "add cell":
+                    console.log("Adding cell to farthest row...");
+                    break;
+                case "delete row":
+                    console.log("Deleting row " + value.rowNumber);
+                    break;
+                case "add cell at":
+                    console.log("Adding cell at ("+ value.rowNumber + ", " + value.cellNumber+")");
+                    break;
+                case "add row at":
+                    console.log("Adding row at " + value.rowNumber);
+                    break;
+                case "add row":
+                    console.log("Adding row to end of stack");
+                    break;
+                default:
+                    console.log("New method detected. Nothing to show here.");
+            }
+        }
     }
 }
