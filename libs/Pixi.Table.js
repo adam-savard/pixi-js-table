@@ -242,7 +242,6 @@ class Table extends PIXI.Container{
                 row.position.y = rowSeparation[index];
             });
             currentColumn++;
-            console.log(columnSeparation);
         }
         
     }
