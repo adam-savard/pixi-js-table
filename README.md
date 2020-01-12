@@ -23,7 +23,7 @@ npm install
 node app.js
 ```
 
-Navigate to [your localhost, port 5000](http://localhost:5000) to check out the small demo I've created to show functionality. You can press c,r,n,a or d to manipluate the table using the build-in functions.
+Navigate to [your localhost, port 5000](http://localhost:5000) to check out the small demo I've created to show functionality. You can press c,r,n,a or d to manipluate the table using the built-in functions.
 
 ## HOW DO I CHANGE DATA IN A CELL?
 
