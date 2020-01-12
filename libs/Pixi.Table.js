@@ -45,14 +45,53 @@ class Table extends PIXI.Container{
     }
 
     /**
+     * Adds a row at the specified location. 
+     * @param {} rowNumber The row number to splice at
+     */
+    addRowAt(rowNumber){
+        console.log(this.rows);
+        this.rows.splice(rowNumber, 0, new PIXI.Container());
+        console.log(this.rows);
+        console.log(this.children);
+        this.addChildAt(this.rows[rowNumber], rowNumber );
+        console.log(this.children);
+        this.updateRows();
+    }
+
+    /**
+     * Adds a cell at the specified x,y location
+     * @param {*} displayObject The display object to add
+     * @param {*} rowNumber The row number
+     * @param {*} cellNumber The cell number
+     */
+    addCellAt(displayObject, rowNumber, cellNumber){
+        let row = this.rows[rowNumber];
+            if(typeof row.cells == 'undefined' && cellNumber == 0){
+                row.cells = [];
+                row.cells.push(displayObject)
+                row.addChild(row.cells[row.cells.length -1]);
+            }
+            else if(cellNumber > row.cells.length){
+                row.cells.push(displayObject)
+                row.addChild(row.cells[row.cells.length -1]);
+            }
+            else{
+                row.cells.splice(cellNumber, 0, displayObject);
+                row.addChildAt(displayObject, cellNumber);
+            }
+
+        this.updateRows();
+    }
+
+    /**
      * Deletes a row from the table by row ID. Redraws the entire object by creating a new one.
      * @param {*} rowNumber The row number to delete.
      */
     deleteRow(rowNumber){
-
         if(rowNumber > -1 && rowNumber < this.rowCount){
             this.rows[rowNumber].destroy(true);
             this.rowCount--;
+            this.rows.splice(rowNumber, 1);
         }
         else{
             throw "Unable to delete row " + rowNumber + ". Row does not exist.";
@@ -96,6 +135,24 @@ class Table extends PIXI.Container{
     }
 
     /**
+     * Deletes a specified cell
+     * @param {*} rowNumber The row number
+     * @param {*} cellNumber The cell number
+     */
+    deleteCell(rowNumber, cellNumber){
+        if(rowNumber > -1 && rowNumber < this.rowCount){
+            if(cellNumber < this.rows[rowNumber].cells.length && cellNumber > -1){
+                this.rows[rowNumber].cells[cellNumber].destroy(true);
+                this.rows[rowNumber].cells.splice(cellNumber,1);
+            }
+        }
+        else{
+            throw "Unable to delete cell (" + rowNumber +", " + cellNumber + "). Row does not exist.";
+        }
+        this.updateRows();
+    }
+
+    /**
      * Gets a cell given a row and cell number. Returns -1 if the cell/row does not exist.
      * @param {*} rowNumber The row number
      * @param {*} cellNumber The cell number on the row
@@ -118,6 +175,8 @@ class Table extends PIXI.Container{
         let maxColWidth = 0;
         let columnSeparation = [0];
         let _inst = this;
+        let maxRowHeight = 0;
+        let rowSeparation = [5];
         
         while(currentColumn < this.maxCols){
             this.rows.forEach(function(row, index){
@@ -125,6 +184,8 @@ class Table extends PIXI.Container{
                     let cell = _inst.getCell(index, currentColumn);
                     //if you're here, check the width of the current cell
                     if(cell.width > maxColWidth) maxColWidth = cell.width;
+
+                    if(cell.height > maxRowHeight) maxRowHeight = cell.height;
                 }
             });
             if(columnSeparation.length > 0){
@@ -133,10 +194,18 @@ class Table extends PIXI.Container{
             else{
                 columnSeparation.push(maxColWidth + 10);
             }
+
+            if(rowSeparation.length > 0){
+                rowSeparation.push(rowSeparation[rowSeparation.length -1] + maxRowHeight + 10);
+            }
+            else{
+                rowSeparation.push(maxRowHeight + 10);
+            }
             
 
             currentColumn++;
             maxColWidth = 0;
+            maxRowHeight = 0;
         }
 
         currentColumn = 0;
@@ -149,10 +218,10 @@ class Table extends PIXI.Container{
                     //if you're here, check the width of the current cell
                     cell.position.x = columnSeparation[currentColumn];
                 }
+                row.position.y = rowSeparation[index];
             });
             currentColumn++;
         }
-
-        console.log(columnSeparation);
+        
     }
 }

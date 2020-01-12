@@ -18,7 +18,7 @@
 
 document.body.appendChild(app.view);
 
-let style = new PIXI.TextStyle({
+var style = new PIXI.TextStyle({
   fontFamily: "Arial",
   fontSize: 12,
   fill: "white",
@@ -46,7 +46,7 @@ let styleNoWrap = new PIXI.TextStyle({
   dropShadowDistance: 6,
 });
 
-let table = new Table();
+var table = new Table();
 table.addCell(new PIXI.Text("This is a large bit of text without word wrap to show you what happens when there's a large cell", styleNoWrap));
 table.addCell(new PIXI.Text("This is more test text", style));
 table.addRow();
@@ -66,18 +66,59 @@ table.addCell(rectangle);
 table.addRow();
 table.addCell(new PIXI.Text("This is even more test text", style));
 table.addCell(new PIXI.Text("This is also test text", style));
-table.addCell(new PIXI.Text("This is very much test text", style));
+table.addCell(new PIXI.Text("This text will be deleted!", style));
 table.addCell(new PIXI.Text("This is much test text", style));
 table.addCell(new PIXI.Text("This is even more test text", style));
+table.addRow();
+table.addCell(new PIXI.Text("This entire row will be deleted!", style));
+table.addCell(new PIXI.Text("You won't see any of this.", style));
+table.addCell(new PIXI.Text("If you do, there's a problem!", style));
 table.addRow();
 table.addCell(new PIXI.Text("This is also test text", style));
 table.addCell(new PIXI.Text("This is very much test text", style));
 table.addCell(new PIXI.Text("This is much test text", style));
+table.deleteCell(3,2);
+table.deleteRow(4);
 
 
 table.position.set(5,5);
 
 app.stage.addChild(table);
+
+function keyPresses() {
+    document.body.onkeypress = function(e) {
+        
+        if (e.key == 'c') {
+            let cell = prompt("What cell should I delete? Indicate by a comma separated value.");
+            let point = cell.split(',');
+            table.deleteCell(point[0], point[1]);
+        }
+
+        if (e.key == 'r') {
+            let row = prompt("What row should I delete?");
+            table.deleteRow(row);
+        }
+
+        if (e.key == 'n') {
+            let cell = prompt("What should be in the new cell?");
+            table.addCell(new PIXI.Text(cell, style));
+        }
+
+        if (e.key == 'a') {
+            let row = prompt("Where do you want to add a row?");
+            table.addRowAt(row);
+        }
+
+        if (e.key == 'd') {
+            let cell = prompt("Where do you want to add a new cell? Indicate by a comma separated value.");
+            let point = cell.split(',');
+            let text = prompt("What should the cell say?");
+            table.addCellAt(new PIXI.Text(text, style), point[0], point[1]);
+        }
+    }
+}
+
+keyPresses();
 
     
   </script>
