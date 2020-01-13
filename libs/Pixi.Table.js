@@ -1,4 +1,4 @@
-//Version 1.0.1
+//Version 1.0.4
 
 /**
  * Creates a new table that can have any PIXI.DisplayObject attached to it. The way to address updates is to use rows and cells.
@@ -8,14 +8,15 @@
 class Table extends PIXI.Container{
     /**
      * Ivoke to get a new Table.
-     * @param {*} options Contains single option for now, drawGridLines.
+     * @param {*} options An options parameter that contains all of the data necessary for the table to display correctly. Default values are set and can be configured manually after the fact.
      */
     constructor(options = {
         debugMode: false,
         rowSeparation : 10,
         columnSeparation : 10,
         rowStartPosition: {x:5,y:5},
-        cellStartPosition: {x:5, y:5}
+        cellStartPosition: {x:5, y:5},
+        tableTitle: null
     }){
         super();
         //options
@@ -24,13 +25,29 @@ class Table extends PIXI.Container{
         this.columnBuffer = options.columnSeparation; //the buffer between columns to be added
         this.rowStartPosition = options.rowStartPosition; //the start position for all rows
         this.cellStartPosition = options.cellStartPosition; //the starting position for all cells
+        this.title = options.tableTitle; //the title of the table. Optional. Null will not draw the title.
 
         //display objects
+        this.drawTitle();
         this.rows = [new PIXI.Container()];
         this.rows[0].position.set(this.rowStartPosition.x,this.rowStartPosition.y);
         this.rowCount = this.rows.length;
         this.maxCols = 0;
         this.addChild(this.rows[0]);
+    }
+
+    /**
+     * INTERNAL USE, NEVER CALL.
+     */
+    drawTitle(){
+        if(this.title != null){
+            this.title.pivot.x = this.title.width / 2;
+        }
+        else{
+            this.title = new PIXI.Text();
+            this.title.pivot.x = this.title.width / 2;
+        }
+        this.addChild(this.title);
     }
 
     /**
@@ -206,12 +223,17 @@ class Table extends PIXI.Container{
      */
     updateRows(){
         this.debugLog("update rows");
+
+        //first thing's first; get the title, if any, and update it
+        this.title.pivot.x = this.title.width / 2;
+        this.title.position.x = this.width / 2;
+
         //we know the maximum amount of columns. We just have to parse through all of them.
         let currentColumn = 0;
         let maxColWidth = 0;
-        let columnSeparation = [this.columnBuffer];
+        let columnSeparation = [this.cellStartPosition.x];
         let _inst = this;
-        let rowSeparation = [this.rowBuffer];
+        let rowSeparation = [this.rowStartPosition.y + this.title.height];
         
         //first thing to do is find out what the highest cell is for each row, and get its height.
         //add that to the previous entry, and you're good to go.
@@ -219,7 +241,7 @@ class Table extends PIXI.Container{
             rowSeparation.push(0);
             if(typeof row.cells != 'undefined'){
                 row.cells.forEach(function(cell){
-                     if(cell.height + 10 + rowSeparation[index] > rowSeparation[index + 1]){
+                     if(cell.height + _inst.rowBuffer + rowSeparation[index] > rowSeparation[index + 1]){
                         rowSeparation[index + 1] = cell.height + _inst.rowBuffer + rowSeparation[index];
                      }
                 });
@@ -240,10 +262,10 @@ class Table extends PIXI.Container{
             });
 
             if(columnSeparation.length > 0){
-                columnSeparation.push(columnSeparation[columnSeparation.length -1] + maxColWidth + this.columnBuffer);
+                columnSeparation.push(columnSeparation[columnSeparation.length -1] + maxColWidth + _inst.columnBuffer);
             }
             else{
-                columnSeparation.push(maxColWidth + this.columnBuffer);
+                columnSeparation.push(maxColWidth + _inst.columnBuffer);
             }
             
 

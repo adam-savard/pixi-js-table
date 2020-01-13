@@ -52,7 +52,8 @@ let options = {
         rowSeparation : 0,
         columnSeparation : 0,
         rowStartPosition: {x:0,y:0},
-        cellStartPosition: {x:0, y:0}
+        cellStartPosition: {x:0, y:0},
+        tableTitle: new PIXI.Text("An Example Table", style)
     }
 
 var table = new Table(options);
@@ -88,6 +89,8 @@ table.addCell(new PIXI.Text("This is very much test text", style));
 table.addCell(new PIXI.Text("This is much test text", style));
 table.deleteCell(3,2);
 table.deleteRow(4);
+//table.title.text = "A change in the title, oh my!";
+table.updateRows();
 
 
 table.position.set(5,5);
