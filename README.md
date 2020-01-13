@@ -1,8 +1,8 @@
-# pixi-table
+# pixi-js-table
 A framework for creating tables in Pixi JS
 
 ## WHAT IS THIS FOR?
-Pixi.Table (invoked by `new Table();`) is a class that you can include in your Pixi projects for displaying a table of any size. This aims to have basic functionality similar to tables in HTML5. This is not terribly efficient, hwoever; large tables may take a very long time to update.
+Pixi.Table (invoked by `new Table();`) is a class that you can include in your Pixi projects for displaying a table of any size. This aims to have basic functionality similar to tables in HTML5. This is not terribly efficient, however; large tables may take a very long time to update.
 
 ## HOW DO I USE THIS?
 
@@ -19,11 +19,11 @@ Make sure you load this AFTER pixi.js or pixi.min.js.
 Yes! Clone the repo, and run the following commands:
 
 ```bash
-npm install
-node app.js
+$ npm install
+$ node app.js
 ```
 
-Navigate to [your localhost, port 5000](http://localhost:5000) to check out the small demo I've created to show functionality. You can press c,r,n,a or d to manipluate the table using the build-in functions.
+Navigate to [your localhost, port 5000](http://localhost:5000) to check out the small demo I've created to show functionality. You can press c,r,n,a or d to manipluate the table using the built-in functions.
 
 ## HOW DO I CHANGE DATA IN A CELL?
 
@@ -32,7 +32,7 @@ When you want to point to a specific cell:
 OR
 `table.getCell(rowNumber,cellNumber)`
 
-While the two lines may seem identical, _`table.getCell()` handles out of range errors be returning `false`, so you can wrap commands like this:_
+While the two lines may seem identical, _`table.getCell()` handles out of range errors by returning `false`, so you can wrap commands like this:_
 
 ```javascript
 let cell;
@@ -54,6 +54,7 @@ if(cell = table.getCell(0,1)){
 | `table.deleteCell(rowNumber, cellNumber);`  | Deletes the specified cell. Note: this calls the `DisplayObject.destroy(true)` function. _All data in this cell WILL be lost, and any references to the cell will cause errors!_  |
 | `table.getCell(rowNumber, cellNumber);`  | Gets the specified cell; returns false if the cell does not exist.  |
 | `table.updateRows();`  | Called automatically when any changes to the table are made, but NOT when data in the cells change. Call this to cascade through the table so automatic spacing is preserved.  |
+| `table.update();`  | An alias for the previous command.  |
 | `table.debugLog(method, value);`  | Internal use. To turn on debugging information, pass in an options object to the class on creation (`{debugLog:true}`)  |
 
 ## LIMITATIONS:
