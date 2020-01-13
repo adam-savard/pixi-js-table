@@ -11,15 +11,23 @@ class Table extends PIXI.Container{
      * @param {*} options Contains single option for now, drawGridLines.
      */
     constructor(options = {
-        debugMode: false
+        debugMode: false,
+        rowSeparation : 10,
+        columnSeparation : 10,
+        rowStartPosition: {x:5,y:5},
+        cellStartPosition: {x:5, y:5}
     }){
         super();
         //options
         this.debugMode = options.debugMode; //for displaying information about what's happening. Goes to the console.log
+        this.rowBuffer = options.rowSeparation; //the buffer between rows to be added
+        this.columnBuffer = options.columnSeparation; //the buffer between columns to be added
+        this.rowStartPosition = options.rowStartPosition; //the start position for all rows
+        this.cellStartPosition = options.cellStartPosition; //the starting position for all cells
 
         //display objects
         this.rows = [new PIXI.Container()];
-        this.rows[0].position.set(5,5);
+        this.rows[0].position.set(this.rowStartPosition.x,this.rowStartPosition.y);
         this.rowCount = this.rows.length;
         this.maxCols = 0;
         this.addChild(this.rows[0]);
@@ -36,12 +44,12 @@ class Table extends PIXI.Container{
         
         if(this.rowCount > 1){
             row.position.set(
-                5,
+                this.rowStartPosition.x,
                 this.rows[this.rows.length -2].y + this.rows[this.rows.length -2].height
             )
         }
         else{
-            row.position.set(5,5);
+            row.position.set(this.rowStartPosition.x,this.rowStartPosition.y);
         }
 
         this.addChild(row);
@@ -61,12 +69,12 @@ class Table extends PIXI.Container{
         let row = this.rows[rowNumber];
         if(this.rowCount > 1){
             row.position.set(
-                5,
+                this.rowStartPosition.x,
                 this.rows[this.rows.length -2].y + this.rows[this.rows.length -2].height
             )
         }
         else{
-            row.position.set(5,5);
+            row.position.set(this.rowStartPosition.x,this.rowStartPosition.y);
         }
         
         this.updateRows();
@@ -83,13 +91,13 @@ class Table extends PIXI.Container{
         let row = this.rows[rowNumber];
             if(typeof row.cells == 'undefined' && cellNumber == 0){
                 row.cells = [];
-                row.cells.push(displayObject)
+                row.cells.push(displayObject);
                 row.addChild(row.cells[row.cells.length -1]);
                 let cell = row.cells[row.cells.length -1];
-                cell.position.set(5,5);
+                cell.position.set(this.cellStartPosition.x,this.cellStartPosition.y);
             }
             else if(cellNumber > row.cells.length){
-                row.cells.push(displayObject)
+                row.cells.push(displayObject);
                 row.addChild(row.cells[row.cells.length -1]);
             }
             else{
@@ -139,12 +147,12 @@ class Table extends PIXI.Container{
             //check to see how long the array is. If it's length of 1, default to (5,5). if not, calculate.
             if(row.cells.length > 1){
                 cell.position.set(
-                    row.cells[row.cells.length -2].x + row.cells[row.cells.length -2].width + 10, //default to 10 over for a 5 px spacing between cells
-                    5 //default to 5 pixels from the top
+                    row.cells[row.cells.length -2].x + row.cells[row.cells.length -2].width + this.columnBuffer, //default to 10 over for a 5 px spacing between cells
+                    this.cellStartPosition.y //default to 5 pixels from the top
                 )
             }
             else{
-                cell.position.set(5,5);
+                cell.position.set(this.cellStartPosition.x,this.cellStartPosition.y);
             }
             row.addChild(cell);
             if(row.cells.length > this.maxCols){
@@ -201,9 +209,9 @@ class Table extends PIXI.Container{
         //we know the maximum amount of columns. We just have to parse through all of them.
         let currentColumn = 0;
         let maxColWidth = 0;
-        let columnSeparation = [5];
+        let columnSeparation = [this.columnBuffer];
         let _inst = this;
-        let rowSeparation = [5];
+        let rowSeparation = [this.rowBuffer];
         
         //first thing to do is find out what the highest cell is for each row, and get its height.
         //add that to the previous entry, and you're good to go.
@@ -212,12 +220,12 @@ class Table extends PIXI.Container{
             if(typeof row.cells != 'undefined'){
                 row.cells.forEach(function(cell){
                      if(cell.height + 10 + rowSeparation[index] > rowSeparation[index + 1]){
-                        rowSeparation[index + 1] = cell.height + 10 + rowSeparation[index];
+                        rowSeparation[index + 1] = cell.height + _inst.rowBuffer + rowSeparation[index];
                      }
                 });
             }
             else{
-                rowSeparation[index + 1] = rowSeparation[index] + 10
+                rowSeparation[index + 1] = rowSeparation[index] + _inst.rowBuffer;
             }
         })
         
@@ -232,10 +240,10 @@ class Table extends PIXI.Container{
             });
 
             if(columnSeparation.length > 0){
-                columnSeparation.push(columnSeparation[columnSeparation.length -1] + maxColWidth + 10);
+                columnSeparation.push(columnSeparation[columnSeparation.length -1] + maxColWidth + this.columnBuffer);
             }
             else{
-                columnSeparation.push(maxColWidth + 10);
+                columnSeparation.push(maxColWidth + this.columnBuffer);
             }
             
 
@@ -257,6 +265,24 @@ class Table extends PIXI.Container{
             currentColumn++;
         }
         
+    }
+
+    /**
+     * Reduces the amound of space between cells.
+     * @param {*} amount The amount of space to reduce by.
+     */
+    clampCells(amount = 2){
+        this.columnBuffer -= amount;
+        this.updateRows();
+    }
+
+    /**
+     * Reduces the amount of space between rows.
+     * @param {*} amount The amount of space to reduce by.
+     */
+    clampRows(amount = 2){
+        this.rowBuffer -= amount;
+        this.updateRows;
     }
 
     /**

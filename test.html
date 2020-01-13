@@ -46,7 +46,16 @@ let styleNoWrap = new PIXI.TextStyle({
   dropShadowDistance: 6,
 });
 
-var table = new Table();
+//change this to get different looks
+let options = {
+        debugMode: false,
+        rowSeparation : 0,
+        columnSeparation : 0,
+        rowStartPosition: {x:0,y:0},
+        cellStartPosition: {x:0, y:0}
+    }
+
+var table = new Table(options);
 table.addCell(new PIXI.Text("This is a large bit of text without word wrap to show you what happens when there's a large cell", styleNoWrap));
 table.addCell(new PIXI.Text("This is more test text", style));
 table.addRow();
