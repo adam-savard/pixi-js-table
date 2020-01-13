@@ -19,8 +19,8 @@ Make sure you load this AFTER pixi.js or pixi.min.js.
 Yes! Clone the repo, and run the following commands:
 
 ```bash
-npm install
-node app.js
+$ npm install
+$ node app.js
 ```
 
 Navigate to [your localhost, port 5000](http://localhost:5000) to check out the small demo I've created to show functionality. You can press c,r,n,a or d to manipluate the table using the built-in functions.
