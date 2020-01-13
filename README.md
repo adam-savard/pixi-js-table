@@ -32,7 +32,7 @@ When you want to point to a specific cell:
 OR
 `table.getCell(rowNumber,cellNumber)`
 
-While the two lines may seem identical, _`table.getCell()` handles out of range errors be returning `false`, so you can wrap commands like this:_
+While the two lines may seem identical, _`table.getCell()` handles out of range errors by returning `false`, so you can wrap commands like this:_
 
 ```javascript
 let cell;
