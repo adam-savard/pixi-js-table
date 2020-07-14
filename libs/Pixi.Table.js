@@ -58,7 +58,6 @@ class Table extends PIXI.Container{
         this.rows.push(new PIXI.Container());
         this.rowCount++;
         let row = this.rows[this.rows.length -1];
-        
         if(this.rowCount > 1){
             row.position.set(
                 this.rowStartPosition.x,
@@ -207,7 +206,7 @@ class Table extends PIXI.Container{
     getCell(rowNumber, cellNumber){
         this.debugLog("get cell", {rowNumber:rowNumber, cellNumber:cellNumber});
         if(rowNumber >= this.rows.length) return false;
-        if(cellNumber >= this.rows[rowNumber].cells.length) return false;
+        if(!this.rows[rowNumber].cells || cellNumber >= this.rows[rowNumber].cells.length) return false;
         if(cellNumber < 0 || rowNumber < 0) return false;
         
         return this.rows[rowNumber].cells[cellNumber];
