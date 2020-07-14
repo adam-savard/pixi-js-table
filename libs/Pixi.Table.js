@@ -206,12 +206,12 @@ class Table extends PIXI.Container{
      */
     getCell(rowNumber, cellNumber){
         this.debugLog("get cell", {rowNumber:rowNumber, cellNumber:cellNumber});
-        try{
-            return this.rows[rowNumber].cells[cellNumber];
-        }
-        catch{
-            return false;
-        }
+        if(rowNumber >= this.rows.length) return false;
+        if(cellNumber >= this.rows[rowNumber].cells.length) return false;
+        if(cellNumber < 0 || rowNumber < 0) return false;
+        
+        return this.rows[rowNumber].cells[cellNumber];
+        
     }
 
     update(){
