@@ -1,6 +1,9 @@
 # pixi-js-table
 A framework for creating tables in Pixi JS
 
+## DISCLAIMER
+Having node_modules in your repo is cringe; I had never done a Node JS project before and went so quick and dirty that it made what I now consider to be awful code.
+
 ## WHAT IS THIS FOR?
 Pixi.Table (invoked by `new Table();`) is a class that you can include in your Pixi projects for displaying a table of any size. This aims to have basic functionality similar to tables in HTML5. This is not terribly efficient, however; large tables may take a very long time to update.
 
