@@ -1,4 +1,4 @@
-import * as PIXI from 'https://cdnjs.cloudflare.com/ajax/libs/pixi.js/6.2.2/esm/pixi.js'; //substitute with your own CDN; this is for ease of use for drag + drop into a project
+import * as PIXI from 'https://cdnjs.cloudflare.com/ajax/libs/pixi.js/6.2.2/browser/pixi.min.mjs'; //substitute with your own CDN; this is for ease of use for drag + drop into a project
 
 /**
  * Creates a new table that can have any PIXI.DisplayObject attached to it. The way to address updates is to use rows and cells.
