@@ -9,6 +9,8 @@ Pixi.Table (invoked by `new Table();`) is a class that you can include in your P
 
 ## HOW DO I USE THIS?
 
+### Vanilla JS
+
 Download the latest version from the releases section, and include on your page via a script tag. For example:
 
 ```html
@@ -17,16 +19,11 @@ Download the latest version from the releases section, and include on your page 
 
 Make sure you load this AFTER pixi.js or pixi.min.js.
 
-## CAN I SEE WHAT IT DOES?
+### ES6 Module
 
-Yes! Clone the repo, and run the following commands:
+I've implemented a basic version of the plugin to work with ES6 modules. To include in server projects (Like React, etc), use `Pixi.Table.es6.mjs`.
 
-```bash
-$ npm install
-$ node app.js
-```
-
-Navigate to [your localhost, port 5000](http://localhost:5000) to check out the small demo I've created to show functionality. You can press c,r,n,a or d to manipluate the table using the built-in functions.
+For a drop-in replacement in the browser, use `Pixi.Table.browser.mjs`. Note that the latter uses CDNJS to load Pixi, so you may want to change that to a locally hosted version. (This was done for the sake of convenience)
 
 ## HOW DO I CHANGE DATA IN A CELL?
 
