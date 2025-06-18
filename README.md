@@ -1,5 +1,5 @@
 # pixi-js-table
-A framework for creating tables in Pixi JS
+A framework for creating tables in Pixi JS. Still compatible with v8.x!
 
 ## DISCLAIMER
 Having node_modules in your repo is cringe; I had never done a Node JS project before and went so quick and dirty that it made what I now consider to be awful code.
